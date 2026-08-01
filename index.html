@@ -1,47 +1,36 @@
-<html>
-<body onload='init()'>
-    <script src='https://d3js.org/d3.v5.min.js'></script>
-    <svg width=300 height=300>
-    
-    <script>
-        async function init() {
-            const data = await d3.csv("https://flunky.github.io/cars2017.csv", d=> ({
-            AverageCityMPG: Number(d.AverageCityMPG),
-            AverageHighwayMPG: Number(d.AverageHighwayMPG),
-            EngineCylinders: Number(d.EngineCylinders)
-            }));
-            
-            
-            var x = d3.scaleLog().base(10).domain([10,150]).range([0, 200]);
-            var y = d3.scaleLog().base(10).domain([10,150]).range([200, 0]);
-            
-            d3.select("svg")
-            .append("g")
-            .attr("transform","translate(50,50)");
-            
-            
-            d3.select("svg")
-            .selectAll("circle")
-            .data(data)
-            .join("circle")
-              .attr("cx", function(d) {return x(d.AverageCityMPG);})
-              .attr("cy",function(d) {return y(d.AverageHighwayMPG);})
-              .attr("r", function(d) {return d.EngineCylinders+2;});
-            
-            d3.select("svg")
-            .append("g")
-            .attr("transform","translate(50,50)")
-            .call(d3.axisLeft(y)
-              .tickValues([10, 20, 50, 100])
-              .tickFormat(d3.format("~s")))
-            
-            d3.select("svg")
-            .append("g")
-            .attr("transform","translate(50,250)")
-            .call(d3.axisBottom(x)
-              .tickValues([10, 20, 50, 100])
-              .tickFormat(d3.format("~s")));
-        }
-    </script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Topic Shifts Trend</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src='https://d3js.org/d3.v7.min.js'></script>
+    <script src='app.js'></script>
+</head>
+<body>
+<main>
+    <p class="subtext">2020 – 2026 | Popular topics</p>
+    <h1>Evolution of Topic Rankings in Awarded Projects</h1>
+    <p class="subheading"> Explore how project objectives (topics) change in prominence over time</p>
+    <button id="tour-start" class="quick-tour"  type="button" disabled>Quick tour</button>
+
+    <div class="navigations">
+        <button id="previous-button" type="button">🡰 Previous year</button>
+        <span id="current-year" aria-live="polite"></span>
+        <button id="next-button" type="button">Next year 🡲</button>
+    </div>
+
+    <div id="svg"></div>
+</main>
+
+<div class="tooltip"></div>
+<div class="tour-overlay" id="tour-overlay" hidden></div>
+<section id="tour-dialog" class="tour-dialog" aria-modal="true" aria-labelledby="tour-heading" role="dialog" hidden>
+    <p id="tour-page" class="tour-page" ></p>
+    <h2 id="tour-heading"></h2>
+    <p id="tour-description"></p>
+    <button id="tour-button" type="button"></button>
+</section>
 </body>
 </html>
